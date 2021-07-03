@@ -1,70 +1,50 @@
-# Getting Started with Create React App
+NavLink
+自帶一個預設的屬性與屬性值 activeClassName='active'，可以讓該路由被點擊到時呈現 active 樣式變化
+若使用 bootstrap 剛好可以對上屬性值 active，因此不用特別寫
+若不是使用 bootstrap，可以根據使用的套件改變屬性值 activeClassName='abcd'
+也可以自訂屬性 style
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+NavLink 二次封裝
+有好幾個 NavLink 帶有 activeClassName、className，可使用 NavLink 二次封裝
 
-## Available Scripts
+Switch
+註冊路由時，一個路由指向多個組件，會同時顯示
+<Route path='/home' component={Home} />
+<Route path='/home' component={Test} />
+上方這樣會同時顯示
+就算路由器已找到路由匹配的組件，沒有第二個路由，路由器還是不會停止，會把所有的路由都檢查過一遍，浪費效能
+<Route path='/home' component={Home} />
+<Route path='/111' component={111} />
+<Route path='/222' component={222} />
+要找 home 會把所有都找過一次
+希望找到 home 匹配的就停止，就要在註冊路由的時候加上 Switch
+<Switch>
+<Route path='/home' component={Home} />
+<Route path='/about' component={About} />
+</Switch>
 
-In the project directory, you can run:
+子路由
+子路由前面要加上父路由
 
-### `yarn start`
+{/_ 向路由組件傳 params 參數 _/}
+{/_ <Link to={`/home/message/detail/${item.id}/${item.title}`}> _/}
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+            {/* 向路由組件傳search參數。?key=${value}&key=${value} */}
+            {/* <Link
+              to={`/home/message/detail/?id=${item.id}&title=${item.title}`}
+            > */}
+            {/* 向路由組件傳state參數 */}
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+             {/* params聲明接參數 */}
+      {/* <Route path='/home/message/detail/:id/:title' component={MessageDetail} /> */}
 
-### `yarn test`
+      {/* search參數不用聲明，正常註冊路由即可 */}
+      {/* <Route path='/home/message/detail' component={MessageDetail} /> */}
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+      // 取params參數。在props物件中match裡的params
 
-### `yarn build`
+// const { id, title } = props.match.params;
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+// 取 search 參數
+// const { search } = props.location; //search 會是一個 urlencoded。urlencoded 樣子，key=value&key=value。
+// const { id, title } = qs.parse(search.slice(1)); //qs.parse()可將 urlencoded 轉成物件型態，.slice(1)處理掉第一個 ? 字
